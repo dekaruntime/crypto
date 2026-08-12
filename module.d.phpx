@@ -1,12 +1,128 @@
 import { Result } from 'core/result'
 
+/// docid: phpx/crypto/random_bytes_result()
+/// <Function name="random_bytes_result">
+///   <Description>PHPX standard module function `random_bytes_result` from `crypto`.</Description>
+///   <Parameter name="$len" type="int" required="false" typeLink="/docs/php/types/int">
+///     Parameter $len.
+///   </Parameter>
+///   <ReturnType type="Result<mixed, string>" />
+/// </Function>
 export function random_bytes_result($len: int = 32): Result<mixed, string>
+
+/// docid: phpx/crypto/random_hex()
+/// <Function name="random_hex">
+///   <Description>PHPX standard module function `random_hex` from `crypto`.</Description>
+///   <Parameter name="$len" type="int" required="false" typeLink="/docs/php/types/int">
+///     Parameter $len.
+///   </Parameter>
+///   <ReturnType type="Result<string, string>" />
+/// </Function>
 export function random_hex($len: int = 32): Result<string, string>
+
+/// docid: phpx/crypto/sha256_hex()
+/// <Function name="sha256_hex">
+///   <Description>PHPX standard module function `sha256_hex` from `crypto`.</Description>
+///   <Parameter name="$value" type="mixed" required="true" typeLink="/docs/php/types/mixed">
+///     Parameter $value.
+///   </Parameter>
+///   <ReturnType type="string" typeLink="/docs/php/types/string" />
+/// </Function>
 export function sha256_hex($value: mixed): string
+
+/// docid: phpx/crypto/hmac_sha256_hex()
+/// <Function name="hmac_sha256_hex">
+///   <Description>PHPX standard module function `hmac_sha256_hex` from `crypto`.</Description>
+///   <Parameter name="$value" type="mixed" required="true" typeLink="/docs/php/types/mixed">
+///     Parameter $value.
+///   </Parameter>
+///   <Parameter name="$key" type="mixed" required="true" typeLink="/docs/php/types/mixed">
+///     Parameter $key.
+///   </Parameter>
+///   <ReturnType type="string" typeLink="/docs/php/types/string" />
+/// </Function>
 export function hmac_sha256_hex($value: mixed, $key: mixed): string
+
+/// docid: phpx/crypto/hmac_sha256_bytes()
+/// <Function name="hmac_sha256_bytes">
+///   <Description>PHPX standard module function `hmac_sha256_bytes` from `crypto`.</Description>
+///   <Parameter name="$value" type="mixed" required="true" typeLink="/docs/php/types/mixed">
+///     Parameter $value.
+///   </Parameter>
+///   <Parameter name="$key" type="mixed" required="true" typeLink="/docs/php/types/mixed">
+///     Parameter $key.
+///   </Parameter>
+///   <ReturnType type="mixed" typeLink="/docs/php/types/mixed" />
+/// </Function>
 export function hmac_sha256_bytes($value: mixed, $key: mixed): mixed
+
+/// docid: phpx/crypto/bcrypt_verify()
+/// <Function name="bcrypt_verify">
+///   <Description>PHPX standard module function `bcrypt_verify` from `crypto`.</Description>
+///   <Parameter name="$password" type="mixed" required="true" typeLink="/docs/php/types/mixed">
+///     Parameter $password.
+///   </Parameter>
+///   <Parameter name="$hash" type="mixed" required="true" typeLink="/docs/php/types/mixed">
+///     Parameter $hash.
+///   </Parameter>
+///   <ReturnType type="bool" typeLink="/docs/php/types/bool" />
+/// </Function>
 export function bcrypt_verify($password: mixed, $hash: mixed): bool
+
+/// docid: phpx/crypto/secure_compare()
+/// <Function name="secure_compare">
+///   <Description>PHPX standard module function `secure_compare` from `crypto`.</Description>
+///   <Parameter name="$a" type="mixed" required="true" typeLink="/docs/php/types/mixed">
+///     Parameter $a.
+///   </Parameter>
+///   <Parameter name="$b" type="mixed" required="true" typeLink="/docs/php/types/mixed">
+///     Parameter $b.
+///   </Parameter>
+///   <ReturnType type="bool" typeLink="/docs/php/types/bool" />
+/// </Function>
 export function secure_compare($a: mixed, $b: mixed): bool
+
+/// docid: phpx/crypto/uuid_v4()
+/// <Function name="uuid_v4">
+///   <Description>PHPX standard module function `uuid_v4` from `crypto`.</Description>
+///   <ReturnType type="Result<string, string>" />
+/// </Function>
 export function uuid_v4(): Result<string, string>
+
+/// docid: phpx/crypto/aes_256_gcm_encrypt()
+/// <Function name="aes_256_gcm_encrypt">
+///   <Description>PHPX standard module function `aes_256_gcm_encrypt` from `crypto`.</Description>
+///   <Parameter name="$key" type="mixed" required="true" typeLink="/docs/php/types/mixed">
+///     Parameter $key.
+///   </Parameter>
+///   <Parameter name="$nonce" type="mixed" required="true" typeLink="/docs/php/types/mixed">
+///     Parameter $nonce.
+///   </Parameter>
+///   <Parameter name="$plaintext" type="mixed" required="true" typeLink="/docs/php/types/mixed">
+///     Parameter $plaintext.
+///   </Parameter>
+///   <Parameter name="$aad" type="mixed" required="false" typeLink="/docs/php/types/mixed">
+///     Parameter $aad.
+///   </Parameter>
+///   <ReturnType type="Result<mixed, string>" />
+/// </Function>
 export function aes_256_gcm_encrypt($key: mixed, $nonce: mixed, $plaintext: mixed, $aad: mixed = ''): Result<mixed, string>
+
+/// docid: phpx/crypto/aes_256_gcm_decrypt()
+/// <Function name="aes_256_gcm_decrypt">
+///   <Description>PHPX standard module function `aes_256_gcm_decrypt` from `crypto`.</Description>
+///   <Parameter name="$key" type="mixed" required="true" typeLink="/docs/php/types/mixed">
+///     Parameter $key.
+///   </Parameter>
+///   <Parameter name="$nonce" type="mixed" required="true" typeLink="/docs/php/types/mixed">
+///     Parameter $nonce.
+///   </Parameter>
+///   <Parameter name="$ciphertext" type="mixed" required="true" typeLink="/docs/php/types/mixed">
+///     Parameter $ciphertext.
+///   </Parameter>
+///   <Parameter name="$aad" type="mixed" required="false" typeLink="/docs/php/types/mixed">
+///     Parameter $aad.
+///   </Parameter>
+///   <ReturnType type="Result<mixed, string>" />
+/// </Function>
 export function aes_256_gcm_decrypt($key: mixed, $nonce: mixed, $ciphertext: mixed, $aad: mixed = ''): Result<mixed, string>
