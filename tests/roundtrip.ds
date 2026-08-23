@@ -1,0 +1,151 @@
+import { random_bytes, digest, secure_compare, sha256, hs256, aes_256_gcm_encrypt, aes_256_gcm_decrypt, bcrypt_verify, uuid_v4, random_hex } from "../index.ds"
+
+fn utf8(value: string): bytes {
+  let encoded = unsafe { new TextEncoder().encode(value) };
+  return match (encoded) {
+    Ok(buf) => buf,
+    Err(err) => utf8("")
+  };
+}
+
+fn to_hex(value: bytes): string {
+  let r = unsafe {
+    var s = "";
+    var i = 0;
+    for (i = 0; i < value.byteLength; i++) {
+      var hex = value[i].toString(16);
+      s += hex.length < 2 ? "0" + hex : hex;
+    }
+    return s;
+  };
+  return match (r) {
+    Ok(v) => v,
+    Err(e) => ""
+  };
+}
+
+fn no_aad(): bytes {
+  let r = unsafe { new Uint8Array(0) };
+  return match (r) {
+    Ok(v) => v,
+    Err(e) => utf8("")
+  };
+}
+
+fn go() {
+  let abc = utf8("abc");
+  const sha = match (sha256(abc)) {
+    Ok(v) => to_hex(v),
+    Err(e) => "fail-sha"
+  };
+  if (sha != "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad") {
+    print("fail-sha256");
+    return;
+  }
+
+  let key = utf8("key");
+  let msg = utf8("The quick brown fox jumps over the lazy dog");
+  const mac = match (hs256(key, msg)) {
+    Ok(v) => to_hex(v),
+    Err(e) => "fail-hmac"
+  };
+  if (mac != "f7bc83f430538424b13298e6aa6fb143ef4d59a14946175997479dbc2d1a3cd8") {
+    print("fail-hmac");
+    return;
+  }
+
+  const eq = match (secure_compare(key, utf8("key"))) {
+    Ok(v) => v,
+    Err(e) => false
+  };
+  const ne = match (secure_compare(key, utf8("kez"))) {
+    Ok(v) => v,
+    Err(e) => true
+  };
+  if (!eq || ne) {
+    print("fail-compare");
+    return;
+  }
+
+  const unknown = match (digest("md5", abc)) {
+    Ok(v) => false,
+    Err(e) => true
+  };
+  if (!unknown) {
+    print("fail-unknown-digest");
+    return;
+  }
+
+  let secret = match (random_bytes(32)) {
+    Ok(v) => v,
+    Err(e) => utf8("")
+  };
+  let nonce = match (random_bytes(12)) {
+    Ok(v) => v,
+    Err(e) => utf8("")
+  };
+  let pt = utf8("hello aead");
+  let aad = no_aad();
+  const round = match (aes_256_gcm_encrypt(secret, nonce, pt, aad)) {
+    Err(e) => "fail-encrypt",
+    Ok(ct) => match (aes_256_gcm_decrypt(secret, nonce, ct, aad)) {
+      Err(e) => "fail-decrypt",
+      Ok(out) => to_hex(out)
+    }
+  };
+  if (round != to_hex(pt)) {
+    print("fail-aes");
+    return;
+  }
+
+  const bcrypt_ok = match (bcrypt_verify("password", "$2y$04$6ck.DhBYy8ZL.sAFGrLZtuLI1F5cSwaM5XHJRxoZFRMx1n8ZpYtJa")) {
+    Ok(v) => v,
+    Err(e) => false
+  };
+  const bcrypt_bad = match (bcrypt_verify("wrong", "$2y$04$6ck.DhBYy8ZL.sAFGrLZtuLI1F5cSwaM5XHJRxoZFRMx1n8ZpYtJa")) {
+    Ok(v) => v,
+    Err(e) => true
+  };
+  if (!bcrypt_ok || bcrypt_bad) {
+    print("fail-bcrypt");
+    return;
+  }
+
+  const id = match (uuid_v4()) {
+    Ok(v) => v,
+    Err(e) => ""
+  };
+  const id_shape = match (unsafe { /^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(id) }) {
+    Ok(v) => v,
+    Err(e) => false
+  };
+  if (!id_shape) {
+    print("fail-uuid");
+    return;
+  }
+
+  const hex = match (random_hex(8)) {
+    Ok(v) => v,
+    Err(e) => ""
+  };
+  if (hex.length != 16) {
+    print("fail-random-hex");
+    return;
+  }
+
+  const n = match (random_bytes(16)) {
+    Ok(v) => match (unsafe { v.byteLength }) {
+      Ok(len) => len,
+      Err(e) => 0
+    },
+    Err(e) => 0
+  };
+  if (n != 16) {
+    print("fail-random-len");
+    return;
+  }
+
+  print("ok");
+}
+
+go()
