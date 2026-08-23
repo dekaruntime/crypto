@@ -1,0 +1,109 @@
+// Host-granted crypto. Bind byte results with `let`, not `const`:
+// Deka freezes const values, and JS cannot freeze typed arrays.
+
+export fn random_bytes(len: number) {
+  return bridge crypto.random_bytes(len)
+}
+
+export fn digest(algorithm: string, data: bytes) {
+  return bridge crypto.digest(algorithm, data)
+}
+
+export fn hmac(algorithm: string, key: bytes, data: bytes) {
+  return bridge crypto.hmac(algorithm, key, data)
+}
+
+export fn secure_compare(a: bytes, b: bytes) {
+  return bridge crypto.secure_compare(a, b)
+}
+
+export fn aes_256_gcm_encrypt(key: bytes, nonce: bytes, plaintext: bytes, aad: bytes) {
+  return bridge crypto.aes_256_gcm_encrypt(key, nonce, plaintext, aad)
+}
+
+export fn aes_256_gcm_decrypt(key: bytes, nonce: bytes, ciphertext: bytes, aad: bytes) {
+  return bridge crypto.aes_256_gcm_decrypt(key, nonce, ciphertext, aad)
+}
+
+export fn bcrypt_verify(password: string, hash: string) {
+  return bridge crypto.bcrypt_verify(password, hash)
+}
+
+export fn sha256(data: bytes) {
+  return digest("sha256", data)
+}
+
+export fn sha384(data: bytes) {
+  return digest("sha384", data)
+}
+
+export fn sha512(data: bytes) {
+  return digest("sha512", data)
+}
+
+export fn sha3_256(data: bytes) {
+  return digest("sha3-256", data)
+}
+
+export fn blake3(data: bytes) {
+  return digest("blake3", data)
+}
+
+export fn hs256(key: bytes, data: bytes) {
+  return hmac("sha256", key, data)
+}
+
+export fn hs384(key: bytes, data: bytes) {
+  return hmac("sha384", key, data)
+}
+
+export fn hs512(key: bytes, data: bytes) {
+  return hmac("sha512", key, data)
+}
+
+export fn random_hex(len: number) {
+  return match (random_bytes(len)) {
+    Err(e) => Err(e),
+    Ok(buf) => match (to_hex(buf)) {
+      Ok(hex) => Ok(hex),
+      Err(e) => Err("hex encode failed")
+    }
+  }
+}
+
+export fn uuid_v4() {
+  return match (random_bytes(16)) {
+    Err(e) => Err(e),
+    Ok(raw) => match (format_uuid_v4(raw)) {
+      Ok(id) => Ok(id),
+      Err(e) => Err("uuid_v4 failed")
+    }
+  }
+}
+
+fn to_hex(value: bytes) {
+  return unsafe {
+    var s = "";
+    var i = 0;
+    for (i = 0; i < value.byteLength; i++) {
+      var hex = value[i].toString(16);
+      s += hex.length < 2 ? "0" + hex : hex;
+    }
+    return s;
+  };
+}
+
+fn format_uuid_v4(raw: bytes) {
+  return unsafe {
+    var b = new Uint8Array(raw);
+    b[6] = (b[6] & 0x0f) | 0x40;
+    b[8] = (b[8] & 0x3f) | 0x80;
+    var hex = "";
+    var i = 0;
+    for (i = 0; i < 16; i++) {
+      var part = b[i].toString(16);
+      hex += part.length < 2 ? "0" + part : part;
+    }
+    return hex.slice(0, 8) + "-" + hex.slice(8, 12) + "-" + hex.slice(12, 16) + "-" + hex.slice(16, 20) + "-" + hex.slice(20);
+  };
+}
