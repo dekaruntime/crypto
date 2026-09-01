@@ -82,7 +82,7 @@ export fn uuid_v4() {
 }
 
 fn to_hex(value: bytes) {
-  return unsafe {
+  return unsafe<string> {
     var s = "";
     var i = 0;
     for (i = 0; i < value.byteLength; i++) {
@@ -94,7 +94,7 @@ fn to_hex(value: bytes) {
 }
 
 fn format_uuid_v4(raw: bytes) {
-  return unsafe {
+  return unsafe<string> {
     var b = new Uint8Array(raw);
     b[6] = (b[6] & 0x0f) | 0x40;
     b[8] = (b[8] & 0x3f) | 0x80;
