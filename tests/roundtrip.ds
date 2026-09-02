@@ -1,6 +1,6 @@
 import { random_bytes, digest, secure_compare, sha256, hs256, aes_256_gcm_encrypt, aes_256_gcm_decrypt, bcrypt_verify, uuid_v4, random_hex } from "../index.ds"
 
-fn utf8(value: string): bytes {
+fn utf8(value: string) bytes {
   let encoded = unsafe { new TextEncoder().encode(value) };
   return match (encoded) {
     Ok(buf) => buf,
@@ -8,7 +8,7 @@ fn utf8(value: string): bytes {
   };
 }
 
-fn to_hex(value: bytes): string {
+fn to_hex(value: bytes) string {
   let r = unsafe {
     var s = "";
     var i = 0;
@@ -24,7 +24,7 @@ fn to_hex(value: bytes): string {
   };
 }
 
-fn no_aad(): bytes {
+fn no_aad() bytes {
   let r = unsafe { new Uint8Array(0) };
   return match (r) {
     Ok(v) => v,
