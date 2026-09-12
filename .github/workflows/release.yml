@@ -32,6 +32,9 @@ jobs:
           curl -sSfL "https://github.com/dekaruntime/dsc/releases/download/v${VERSION}/dsc-darwin-arm64" -o /tmp/dsc
           chmod +x /tmp/dsc
 
+      - name: Install package dependencies
+        run: DEKA_DSC=/tmp/dsc /tmp/deka install
+
       - name: Verify package as an installed consumer
         run: DEKA_DSC=/tmp/dsc /tmp/deka check --as-package .
 
