@@ -55,7 +55,7 @@ jobs:
             VERSION="${GITHUB_REF_NAME#v}"
           fi
           mkdir -p /tmp/dist
-          tar -czf "/tmp/dist/${MODULE}-${VERSION}.tgz" --exclude='.git' .
+          tar -czf "/tmp/dist/${MODULE}-${VERSION}.tgz" --exclude='.git' --exclude='ds_modules' --exclude='.deka.json-backup-*' --exclude='.github' .
           echo "MODULE=$MODULE" >> "$GITHUB_ENV"
           echo "VERSION=$VERSION" >> "$GITHUB_ENV"
           echo "ARCHIVE=/tmp/dist/${MODULE}-${VERSION}.tgz" >> "$GITHUB_ENV"
